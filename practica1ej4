@@ -1,0 +1,66 @@
+programa pracrica1ej4
+procesos
+  proceso recorrerAreaP(E numAv: numero)
+  comenzar
+    Pos(numAv, 1)
+    repetir 24
+      repetir 99
+        mientras(HayPapelEnLaEsquina)
+          tomarPapel
+        mover
+      Pos(PosAv+1, 1)
+      mientras(HayPapelEnLaEsquina)
+        tomarPapel
+    repetir 99
+      mientras(HayPapelEnLaEsquina)
+        tomarPapel
+      mover
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+        
+  fin
+  proceso recorrerAreaI(E numAv:numero)
+  comenzar
+    Pos(numAv, 1)
+    repetir 24
+      repetir 99
+        mientras(HayFlorEnLaEsquina)
+          tomarFlor
+        mover
+      Pos(PosAv+1, 1)
+      mientras(HayFlorEnLaEsquina)
+        tomarFlor
+    repetir 99
+      mientras(HayFlorEnLaEsquina)
+        tomarFlor
+      mover
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor 
+  fin
+areas
+  area1: AreaP(1,1,25,100)
+  area2: AreaP(26,1,50,100)
+  area3: AreaP(51,1,75,100)
+  area4: AreaP(76,1,100,100)
+robots
+  robot par
+  comenzar
+    recorrerAreaP(26)
+    recorrerAreaP(76)
+  fin
+  robot impar
+  comenzar
+    recorrerAreaI(1)
+    recorrerAreaI(51)
+  fin
+variables
+  rPar: par
+  rImp: impar
+comenzar
+  AsignarArea(rPar, area2)
+  AsignarArea(rPar, area4)
+  AsignarArea(rImp, area1)
+  AsignarArea(rImp, area3)
+  Iniciar(rPar, 26,1)
+  Iniciar(rImp, 1,1)
+fin

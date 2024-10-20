@@ -1,0 +1,62 @@
+{Bienvenidos al entorno CMRE.
+Lo siguiente es un código de ejemplo que implementa un
+proceso que recibe un número de avenida como parámetro,
+se posiciona en esa avenida y la recorre.}
+
+programa ejemplo
+procesos
+  proceso recorrer(E numAv: numero; E numCa: numero)
+  variables
+    cantPapel: numero
+  comenzar
+    cantPapel:=0
+    Pos(numAv, numCa)
+    repetir 19
+      mientras(HayPapelEnLaEsquina)
+        tomarPapel
+        cantPapel:=cantPapel+1
+      mover
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      cantPapel:=cantPapel+1
+    Informar(cantPapel)
+  fin
+areas
+  ciudad: AreaC (1,1,100,100)
+robots
+  robot robot1
+  comenzar
+    recorrer(10,10)
+  fin
+  robot robot2
+  comenzar
+    derecha
+    recorrer(10, 30)
+  fin
+  robot robot3
+  comenzar
+    repetir 2
+      derecha
+    recorrer(30, 30)
+  fin
+  robot robot4
+  comenzar
+    repetir 3
+      derecha
+    recorrer(30,10)
+  fin
+variables
+  rob1: robot1
+  rob2: robot2
+  rob3: robot3
+  rob4: robot4
+comenzar
+  AsignarArea(rob1, ciudad)
+  AsignarArea(rob2, ciudad)
+  AsignarArea(rob3, ciudad)
+  AsignarArea(rob4, ciudad)
+  Iniciar(rob1, 1,1)
+  Iniciar(rob2, 2,1)
+  Iniciar(rob3, 3,1)
+  Iniciar(rob4, 4,1)
+fin

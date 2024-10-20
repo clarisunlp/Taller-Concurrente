@@ -1,0 +1,30 @@
+programa practica1ej1
+procesos
+  proceso recorrerAvenida
+  comenzar
+    repetir 99
+      mientras(HayFlorEnLaEsquina)
+        tomarFlor
+      mover
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+  fin
+areas
+  ciudad: AreaC (1,1,100,100)
+robots
+  robot robot1
+  comenzar
+    recorrerAvenida
+  fin
+variables
+  R_info: robot1
+  pepe: robot1
+  pepe2: robot1
+comenzar
+  AsignarArea(R_info, ciudad)
+  AsignarArea(pepe, ciudad)
+  AsignarArea(pepe2, ciudad)
+  Iniciar(R_info, 1,1)
+  Iniciar(pepe, 3,1)
+  Iniciar(pepe2, 5,1)
+fin
