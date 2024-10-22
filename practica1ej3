@@ -1,51 +1,66 @@
-programa practica1ej3
+programa practica1ej5
 procesos
-  proceso recorrer(E tamanio:numero ES f:numero ES p: numero)
+  proceso limpiarFlores(E numAv:numero E numCa:numero E cant:numero)
   comenzar
-    repetir tamanio
+    Pos(numAv, numCa)
+    repetir cant
       mientras(HayFlorEnLaEsquina)
         tomarFlor
-        f:=f+1
+      mover
+    mientras(HayFlorEnLaBolsa)
+      depositarFlor
+  fin
+  proceso limpiarPapeles(E numAv:numero E numCa:numero E cant:numero)
+  comenzar
+    Pos(numAv, numCa)
+    repetir cant
       mientras(HayPapelEnLaEsquina)
         tomarPapel
-        p:=p+1
-      mientras(HayFlorEnLaBolsa)
-        depositarFlor
-      mientras(HayPapelEnLaBolsa)
-        depositarPapel
       mover
+    Pos(numAv, numCa)
+    mientras(HayPapelEnLaBolsa)
+      depositarPapel
   fin
 areas
-  ciudad: AreaC (12,6,32,24)
+  area1: AreaP(1,75,16,80)
+  area2: AreaP(75,80,80,100)
+  area3: AreaP(70,10,100,15)
+  area4: AreaP(10,1,15,11)
 robots
-  robot escalon
-  variables
-    tam, cantF,cantP, supera: numero
+  robot robot1
   comenzar
-    tam:=1
-    supera:=0
-    repetir 4
-      cantF:=0
-      cantP:=0
-      recorrer(tam, cantF, cantP)
-      derecha
-      recorrer(tam, cantF, cantP)
-      repetir 3
-        derecha
-      si((cantP-cantF)=1)
-        supera:=supera+1
-      tam:=tam+1
-    Informar(supera)
+    derecha
+    limpiarFlores(1, 75, 15)
+    limpiarFlores(1, 80, 15)
+  fin
+  robot robot2
+  comenzar
+    limpiarPapeles(75, 80, 20)
+    limpiarPapeles(80, 80, 20)
+  fin
+  robot robot3
+  comenzar
+    derecha
+    limpiarFlores(70, 15, 30)
+    limpiarFlores(70, 10, 30)
+  fin
+  robot robot4
+  comenzar
+    limpiarPapeles(10, 1, 10)
+    limpiarPapeles(15, 1, 10)
   fin
 variables
-  rob1: escalon
-  rob2: escalon
-  rob3: escalon
+  rob1: robot1
+  rob2: robot2
+  rob3: robot3
+  rob4: robot4
 comenzar
-  AsignarArea(rob1, ciudad)
-  AsignarArea(rob2, ciudad)
-  AsignarArea(rob3, ciudad)
-  Iniciar(rob1, 12,14)
-  Iniciar(rob2, 17,10)
-  Iniciar(rob3, 22,6)
+  AsignarArea(rob1, area1)
+  AsignarArea(rob2, area2)
+  AsignarArea(rob3, area3)
+  AsignarArea(rob4, area4)
+  Iniciar(rob1, 1,75)
+  Iniciar(rob2, 75,80)
+  Iniciar(rob3, 70,15)
+  Iniciar(rob4, 10,1)
 fin
