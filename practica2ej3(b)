@@ -1,0 +1,105 @@
+programa practica2ej3b
+procesos
+  proceso recorrerCalleF(ES cantF:numero)
+  comenzar
+    repetir 9
+      mientras(HayFlorEnLaEsquina)
+        tomarFlor
+        cantF:=cantF+1
+      mover
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      cantF:=cantF+1
+  fin
+  proceso recorrerCalleP(ES cantP:numero)
+  comenzar
+    repetir 9
+      mientras(HayPapelEnLaEsquina)
+        tomarPapel
+        cantP:=cantP+1
+      mover
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      cantP:=cantP+1
+  fin 
+areas
+  areaA1: AreaP(1,1,10,1) {PREGUNTA: puedo declarar un solo area compartida??}
+  areaA2: AreaP(11,1,20,1)
+  areaA1b: AreaP(21,1,30,1)
+  areaA2b: AreaP(31,1,40,1)
+  areaB1: AreaP(1,5,10,5)
+  areaB2: AreaP(11,5,20,5)
+  areaB1b: AreaP(21,5,30,5)
+  areaB2b: AreaP(31,5,40,5)
+robots
+  robot A1
+  variables
+    cantPapeles:numero
+  comenzar
+    cantPapeles:=0
+    derecha
+    recorrerCalleP(cantPapeles)
+    EnviarMensaje(cantPapeles, robA2)
+    Pos(21,1)
+    RecibirMensaje(cantPapeles, robA2)
+    recorrerCalleP(cantPapeles)
+    EnviarMensaje(cantPapeles, robA2)  
+  fin
+  robot A2
+  variables
+    cantPapeles:numero
+  comenzar
+    derecha
+    RecibirMensaje(cantPapeles, robA1)
+    recorrerCalleP(cantPapeles)
+    EnviarMensaje(cantPapeles, robA1)
+    Pos(31,1)
+    RecibirMensaje(cantPapeles, robA1)
+    recorrerCalleP(cantPapeles)
+    Informar(cantPapeles)
+  fin
+  robot B1
+  variables
+    cantFlores:numero
+  comenzar
+    cantFlores:=0
+    derecha
+    recorrerCalleF(cantFlores)
+    EnviarMensaje(cantFlores, robB2)
+    Pos(21,5)
+    RecibirMensaje(cantFlores, robB2)
+    recorrerCalleF(cantFlores)
+    EnviarMensaje(cantFlores, robB2)
+  fin
+  robot B2
+  variables
+    cantFlores:numero
+  comenzar
+    derecha
+    RecibirMensaje(cantFlores, robB1)
+    recorrerCalleF(cantFlores)
+    EnviarMensaje(cantFlores, robB1)
+    Pos(31,5)
+    RecibirMensaje(cantFlores, robB1)
+    recorrerCalleF(cantFlores)
+    Informar(cantFlores) 
+  fin
+variables
+  robA1: A1
+  robA2: A2
+  robB1: B1
+  robB2: B2
+comenzar
+  AsignarArea(robA1, areaA1)
+  AsignarArea(robA1, areaA1b)
+  AsignarArea(robA2, areaA2)
+  AsignarArea(robA2, areaA2b)
+  AsignarArea(robB1, areaB1)
+  AsignarArea(robB1, areaB1b)
+  AsignarArea(robB2, areaB2)
+  AsignarArea(robB2, areaB2b)
+  Iniciar(robA1,1,1)
+  Iniciar(robA2,11,1)
+  Iniciar(robB1,1,5)
+  Iniciar(robB2,11,5)
+fin

@@ -1,0 +1,66 @@
+programa ejemplo
+procesos
+  proceso recorrer(ES cantF: numero)
+  comenzar
+    repetir 9
+      mientras(HayFlorEnLaEsquina)
+        tomarFlor
+        cantF:=cantF+1
+      mover
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      cantF:=cantF+1
+  fin
+areas
+  area1: AreaP(1,1,1,10)
+  area2: AreaP(2,11,2,20)
+  area3: AreaP(3,21,3,30)
+  area4: AreaP(4,31,4,40)
+  area5: AreaP(5,41,5,50)
+  area6: AreaP(6,51,6,60)
+  areaF: AreaP(2,1,2,1)
+robots
+  robot recolector
+  variables
+    cantFlores:numero
+  comenzar
+    cantFlores:=0
+    recorrer(cantFlores)
+    EnviarMensaje(cantFlores,robF)
+  fin
+  robot fiscalizador
+  variables
+    flores:numero
+    max: numero
+  comenzar
+    max:=0
+    repetir 6
+      RecibirMensaje(flores, *)
+      si(flores>max)
+        max:=flores
+    Informar(max)
+  fin
+variables
+  rob1: recolector
+  rob2: recolector
+  rob3: recolector
+  rob4: recolector
+  rob5: recolector
+  rob6: recolector
+  robF: fiscalizador
+comenzar
+  AsignarArea(rob1, area1)
+  AsignarArea(rob2, area2)
+  AsignarArea(rob3, area3)
+  AsignarArea(rob4, area4)
+  AsignarArea(rob5, area5)
+  AsignarArea(rob6, area6)
+  AsignarArea(robF, areaF)
+  Iniciar(rob1, 1,1)
+  Iniciar(rob2, 2,11)
+  Iniciar(rob3, 3,21)
+  Iniciar(rob4, 4,31)
+  Iniciar(rob5, 5,41)
+  Iniciar(rob6, 6,51)
+  Iniciar(robF, 2,1)
+fin

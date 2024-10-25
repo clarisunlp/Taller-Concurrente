@@ -1,0 +1,79 @@
+programa practica2ej2
+procesos
+  proceso recorrer (E cant: numero; ES cantF:numero; ES cantP:numero)
+  comenzar
+    repetir cant
+      mientras(HayFlorEnLaEsquina)
+        tomarFlor
+        cantF:=cantF+1
+      mientras(HayPapelEnLaEsquina)
+        tomarPapel
+        cantP:=cantP+1
+      mover
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      cantF:=cantF+1
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      cantP:=cantP+1
+  fin
+  proceso escalon(ES cantF:numero; ES cantP:numero)
+  variables
+    alto:numero
+  comenzar
+    Random(alto,1,5)
+    recorrer(alto, cantF, cantP)
+    derecha
+    recorrer(1, cantF, cantP)
+    repetir 3
+      derecha
+  fin
+areas
+  area1: AreaP (2,1,6,21)
+  area2: AreaP (7,1,11,21)
+  area3: AreaP (12,1,16,21)
+  areaJ: AreaP (1,1,1,1)
+robots
+  robot recolector
+  variables
+    cantFlores:numero
+    cantPapeles:numero
+    cantEsc:numero
+  comenzar
+    cantFlores:=0
+    cantPapeles:=0
+    cantEsc:=0
+    repetir 4
+      escalon(cantFlores,cantPapeles)
+      si(cantFlores>cantPapeles)
+        cantEsc:=cantEsc+1
+      cantFlores:=0
+      cantPapeles:=0
+    EnviarMensaje(cantEsc,robJ)
+  fin
+  robot jefe
+  variables
+    total:numero
+    cant:numero
+  comenzar
+    total:=0
+    repetir 3
+      RecibirMensaje(cant, *)
+      total:=total+cant
+    Informar(total)
+  fin
+variables
+  rob1: recolector
+  rob2: recolector
+  rob3: recolector
+  robJ: jefe
+comenzar
+  AsignarArea(rob1, area1)
+  AsignarArea(rob2, area2)
+  AsignarArea(rob3, area3)
+  AsignarArea(robJ, areaJ)
+  Iniciar(rob1, 2,1)
+  Iniciar(rob2, 7,1)
+  Iniciar(rob3, 12,1)
+  Iniciar(robJ, 1,1)
+fin

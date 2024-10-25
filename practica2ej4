@@ -1,0 +1,152 @@
+{Bienvenidos al entorno CMRE.
+Lo siguiente es un código de ejemplo que implementa un
+proceso que recibe un número de avenida como parámetro,
+se posiciona en esa avenida y la recorre.}
+
+programa ejemplo
+procesos
+  proceso limpiarEsquina(ES tot:numero)
+  variables
+    av:numero
+    ca:numero
+    actAv:numero
+    actCa:numero
+  comenzar
+    actAv:=PosAv
+    actCa:=PosCa
+    Random(av, 25,75)
+    Random(ca,25,75)
+    Pos(av,ca)
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      tot:=tot+1
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      tot:=tot+1
+    Pos(actAv,actCa)
+  fin
+  proceso inicializar
+  comenzar
+    EnviarMensaje(1,rob1)
+    EnviarMensaje(2,rob2)
+    EnviarMensaje(3,rob3)
+    EnviarMensaje(4,rob4)
+  fin
+  proceso decidirReceptor
+  variables
+    num:numero
+  comenzar
+    Random(num,1,4)
+    si(num=1)
+      EnviarMensaje(V,rob1)
+    sino
+      si(num=2)
+        EnviarMensaje(V,rob2)
+      sino
+        si(num=3)
+          EnviarMensaje(V,rob3)
+        sino
+          EnviarMensaje(V,rob4)
+  fin
+  proceso terminar
+  comenzar
+    EnviarMensaje(F, rob1)
+    EnviarMensaje(F, rob2)
+    EnviarMensaje(F, rob3)
+    EnviarMensaje(F, rob4)
+  fin
+  proceso decidirGanador(E id:numero)
+  comenzar
+    si(id=1)
+      EnviarMensaje(V,rob1)
+      EnviarMensaje(F,rob2)
+      EnviarMensaje(F,rob3)
+      EnviarMensaje(F,rob4)
+    sino
+      si(id=2)
+        EnviarMensaje(V,rob2)
+        EnviarMensaje(F,rob1)
+        EnviarMensaje(F,rob3)
+        EnviarMensaje(F,rob4)
+      sino
+        si(id=3)
+          EnviarMensaje(V,rob3)
+          EnviarMensaje(F,rob1)
+          EnviarMensaje(F,rob2)
+          EnviarMensaje(F,rob4)
+        sino
+          EnviarMensaje(V,rob4)
+          EnviarMensaje(F,rob1)
+          EnviarMensaje(F,rob2)
+          EnviarMensaje(F,rob3)
+  fin
+areas
+  cuadrante: AreaPC (25,25,75,75)
+  area1: AreaP(25,1,25,1)
+  area2: AreaP(30,1,30,1)
+  area3: AreaP(35,1,35,1)
+  area4: AreaP(40,1,40,1)
+  areaF: AreaP(1,1,1,1)
+robots
+  robot recolector
+  variables
+    tot:numero
+    puedo,gane: boolean
+    quienSoy:numero
+  comenzar
+    RecibirMensaje(quienSoy, robF)
+    puedo:=F
+    gane:=F
+    tot:=0
+    RecibirMensaje(puedo, robF)
+    mientras(puedo)
+      limpiarEsquina(tot)
+      EnviarMensaje(quienSoy, robF)
+      EnviarMensaje(tot, robF)
+      RecibirMensaje(puedo, robF)
+    RecibirMensaje(gane, robF)
+    si(gane)
+      Pos(50,50)
+  fin
+  robot fiscalizador
+  variables
+    robID:numero
+    cant:numero
+    maxCant:numero
+    maxRob:numero
+  comenzar
+    inicializar
+    maxCant:=0
+    repetir 10
+      decidirReceptor
+      RecibirMensaje(robID, *)
+      RecibirMensaje(cant, *)
+      si(cant>maxCant)
+        maxCant:=cant
+        maxRob:=robID
+    terminar
+    decidirGanador(robID)
+    Informar(maxRob, maxCant)
+  fin
+variables
+  rob1: recolector
+  rob2: recolector
+  rob3: recolector
+  rob4: recolector
+  robF: fiscalizador
+comenzar
+  AsignarArea(rob1, cuadrante)
+  AsignarArea(rob2, cuadrante)
+  AsignarArea(rob3, cuadrante)
+  AsignarArea(rob4, cuadrante)
+  AsignarArea(rob1, area1)
+  AsignarArea(rob2, area2)
+  AsignarArea(rob3, area3)
+  AsignarArea(rob4, area4)
+  AsignarArea(robF, areaF)
+  Iniciar(rob1, 25,1)
+  Iniciar(rob2, 30,1)
+  Iniciar(rob3, 35,1)
+  Iniciar(rob4, 40,1)
+  Iniciar(robF, 1,1)
+fin
