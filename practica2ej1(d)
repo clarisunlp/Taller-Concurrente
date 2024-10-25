@@ -11,6 +11,34 @@ procesos
       tomarFlor
       cantF:=cantF+1
   fin
+  proceso inicializar
+  comenzar
+    EnviarMensaje(1, rob1)
+    EnviarMensaje(2, rob2)
+    EnviarMensaje(3, rob3)
+    EnviarMensaje(4, rob4)
+    EnviarMensaje(5, rob5)
+    EnviarMensaje(6, rob6)
+  fin
+  proceso quienMeMando(E id:numero; ES cant:numero)
+  comenzar
+    si(id=1)
+      RecibirMensaje(cant, rob1)
+    sino
+      si(id=2)
+        RecibirMensaje(cant, rob2)
+      sino
+        si(id=3)
+          RecibirMensaje(cant, rob3)
+        sino
+          si(id=4)
+            RecibirMensaje(cant, rob4)
+          sino
+            si(id=5)
+              RecibirMensaje(cant, rob5)
+            sino
+              RecibirMensaje(cant, rob6)
+  fin  
 areas
   area1: AreaP(1,1,1,10)
   area2: AreaP(2,11,2,20)
@@ -38,20 +66,14 @@ robots
     idRob: numero
     maxRob:numero
   comenzar
-    EnviarMensaje(1, rob1)
-    EnviarMensaje(2, rob2)
-    EnviarMensaje(3, rob3)
-    EnviarMensaje(4, rob4)
-    EnviarMensaje(5, rob5)
-    EnviarMensaje(6, rob6)
+    inicializar
     max:=0
     repetir 6
       RecibirMensaje(idRob, *)
-      RecibirMensaje(flores, *){PREGUNTAR}
+      quienMeMando(idRob, flores)
       si(flores>max)
         max:=flores
         maxRob:=idRob
-    {Informar("robot: " , maxRob , "cantidad de flores: " , max) PREGUNTAR}
     Informar(maxRob,max)
   fin
 variables
