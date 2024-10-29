@@ -15,7 +15,7 @@ procesos
   fin
   proceso juntarP(ES p:numero)
   comenzar
-    mienras(HayPapelEnLaEsquina)
+    mientras(HayPapelEnLaEsquina)
       tomarPapel
       p:=(p+1)
   fin
@@ -38,7 +38,7 @@ procesos
   variables
     lado:numero
   comenzar
-    lado:2
+    lado:=2
     repetir 4
       repetir 2
         repetir lado
@@ -80,15 +80,7 @@ procesos
       derecha
   fin
 areas
-  area1f: AreaP(1,1,1,6)
-  area2f: AreaP(2,6,6,6)
-  area3f: AreaP(6,7,6,10)
-  area4f: AreaP(7,10,10,10)
-  area5f: AreaP(10,11,10,13)
-  area6f: AreaP(11,13,13,13)
-  area7f: AreaP(13,14,13,15)
-  area8f: AreaP(14,15,15,15)
-  area9f: AreaP(12,16.16,16)
+  ciudad: AreaC(1,1,100,100)
 robots
   robot florero
   variables
@@ -118,6 +110,7 @@ robots
   fin
   robot jefe
   variables
+    robId:numero
   comenzar
     EnviarMensaje(1,rob1)
     EnviarMensaje(2,rob2)
@@ -126,18 +119,14 @@ robots
     RecibirMensaje(robId,*){que pasa si mando un mensaje y no lo recibo nunca?}
   fin
 variables
-  r1: florero
-  r2: papelero
+  rob1: florero
+  rob2: papelero
   robJ: jefe
 comenzar
-  AsignarArea(r1, area1f)
-  AsignarArea(r1, area2f)
-  AsignarArea(r1, area3f)
-  AsignarArea(r1, area4f)
-  AsignarArea(r1, area5f)
-  AsignarArea(r1, area6f)
-  AsignarArea(r1, area7f)
-  AsignarArea(r1, area8f)
-  AsignarArea(r1, area9f)
-  Iniciar(r1, 1,1)
+  AsignarArea(rob1, ciudad)
+  AsignarArea(rob2, ciudad)
+  AsignarArea(robJ, ciudad)
+  Iniciar(rob1, 1,1)
+  Iniciar(rob2, 31,1)
+  Iniciar(robJ, 15,1)
 fin
