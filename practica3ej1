@@ -1,0 +1,131 @@
+{Realice un programa con 2 robots recolectores de flores (floreros) y 2 robots recolectores de papeles (papeleros). Los floreros comparten área y tienen 5 intentos cada uno para juntar las flores de una esquina, dentro de dicha área, elegida al azar en cada intento. Del mismo modo, los papeleros comparten área y tienen 3 intentos cada uno para juntar los papeles. En cada intento cada robot va a la esquina al azar, junta todos los elementos (flores o papeles según le corresponda) y vuelve a su esquina original. Al finalizar sus intentos cada robot debe acceder a la esquina (10, 10) y depositar los elementos recogidos de a uno.}
+{- Área de floreros: (1,1) a (5, 10)}
+{- Área de papeleros: (6, 1) a (10, 9)}
+{- Esquinas de inicio de floreros: (6,10) y (7,10)}
+{- Esquinas de inicio de papeleros: (8,10) y (9,10)}
+programa practica3ej1
+procesos
+  proceso elegirEsquinaF(ES av:numero; ES ca:numero)
+  variables
+    avenida,calle:numero
+  comenzar
+    Random(avenida,1,5)
+    Random(calle,1,10)
+    av:=avenida
+    ca:=calle
+  fin
+  proceso elegirEsquinaP(ES av:numero; ES ca:numero)
+  variables
+    avenida,calle:numero
+  comenzar
+    Random(avenida,6,10)
+    Random(calle,1,9)
+    av:=avenida
+    ca:=calle
+  fin
+  proceso agarrarF(E ave:numero; E ca:numero; ES f:numero)
+  variables
+    aveIni, caIni:numero
+  comenzar
+    aveIni:=PosAv
+    caIni:=PosCa
+    BloquearEsquina(ave, ca)
+    Pos(ave,ca)
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+    Pos(aveIni, caIni)
+    LiberarEsquina(ave, ca)
+  fin
+  proceso agarrarP(E ave:numero; E ca:numero; ES p:numero)
+  variables
+    aveIni, caIni:numero
+  comenzar
+    aveIni:=PosAv
+    caIni:=PosCa
+    BloquearEsquina(ave,ca)
+    Pos(ave,ca)
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      p:=p+1
+    Pos(aveIni,caIni)
+    LiberarEsquina(ave,ca)
+  fin
+  proceso dejarF(E cant:numero)
+  variables
+    aveIni,caIni:numero
+  comenzar
+    aveIni:=PosAv
+    caIni:=PosCa
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    repetir cant
+      depositarFlor
+    Pos(aveIni,caIni)
+    LiberarEsquina(10,10)
+  fin
+  proceso dejarP(E cant:numero)
+  variables
+    aveIni,caIni:numero
+  comenzar
+    aveIni:=PosAv
+    caIni:=PosCa
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    repetir cant
+      depositarPapel
+    Pos(aveIni,caIni)
+    LiberarEsquina(10,10)
+  fin
+areas
+  areaFloreros: AreaPC(1,1,5,10)
+  areaPapeleros: AreaPC(6,1,10,9)
+  areaF1: AreaP(6,10,6,10)
+  areaF2: AreaP(7,10,7,10)
+  areaP1: AreaP(8,10,8,10)
+  areaP2: AreaP(9,10,9,10)
+  areaFinal: AreaC(10,10,10,10)
+robots
+  robot florero
+  variables
+    ave,ca,cantF:numero
+  comenzar
+    cantF:=0
+    repetir 5
+      elegirEsquinaF(ave,ca){debería hacer 2 procesos o 1 solo y pasarle parametros?}
+      agarrarF(ave,ca,cantF)
+    dejarF(cantF)
+  fin
+  robot papelero
+  variables
+    ave,ca,cantP:numero
+  comenzar
+    cantP:=0
+    repetir 3
+      elegirEsquinaP(ave,ca)
+      agarrarP(ave,ca,cantP)
+    dejarP(cantP)
+  fin
+variables
+  F1: florero
+  F2: florero
+  P1: papelero
+  P2: papelero
+comenzar
+  AsignarArea(F1, areaFloreros)
+  AsignarArea(F1, areaF1)
+  AsignarArea(F2, areaFloreros)
+  AsignarArea(F2, areaF2)
+  AsignarArea(P1, areaPapeleros)
+  AsignarArea(P1, areaP1)
+  AsignarArea(P2, areaPapeleros)
+  AsignarArea(P2, areaP2)
+  AsignarArea(F1, areaFinal)
+  AsignarArea(F2, areaFinal)
+  AsignarArea(P1, areaFinal)
+  AsignarArea(P2, areaFinal)
+  Iniciar(F1,6,10)
+  Iniciar(F2,7,10)
+  Iniciar(P1,8,10)
+  Iniciar(P2,9,10)
+fin

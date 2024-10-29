@@ -1,0 +1,106 @@
+{Realice un programa en el que 4 robots juegan una carrera por avenidas diferentes: 4, 6, 8 y 10 respectivamente. Todos los robots inician en la calle 1. Para poder avanzar, cada robot debe juntar un papel de una fuente de papeles localizada en la esquina (11,11), colocarlo en la esquina actual de su avenida y avanzar un paso.}
+{Cuando la esquina fuente ya no tiene más papeles, o cuando se haya completado la avenida, deberán avisar al robot coordinador y este determinará el robot que llegó más lejos.}
+programa practica3ej5
+procesos
+  proceso avanzar(ES ok:boolean)
+  variables
+    caAct,aveAct:numero
+  comenzar
+    caAct:=PosCa
+    aveAct:=PosAv
+    BloquearEsquina(11,11)
+    Pos(11,11)
+    si(HayFlorEnLaEsquina)
+      tomarFlor
+    sino
+      ok:=F
+    Pos(aveAct,caAct)
+    LiberarEsquina(11,11)
+  fin
+  proceso inicializar
+  comenzar
+    EnviarMensaje(1,rob1)
+    EnviarMensaje(2,rob2)
+    EnviarMensaje(3,rob3)
+    EnviarMensaje(4,rob4)
+  fin
+  proceso recibirCant(E id:numero; ES cant:numero)
+  variables
+    n:numero
+  comenzar
+    si(id=1)
+      RecibirMensaje(n,rob1)
+    sino
+      si(id=2)
+        RecibirMensaje(n,rob2)
+      sino
+        si(id=3)
+          RecibirMensaje(n,rob3)
+        sino
+          RecibirMensaje(n,rob4)
+    cant:=n
+  fin 
+  proceso determinarGanador(ES g:numero)
+  variables
+    id,cant,max:numero
+  comenzar
+    max:=-1
+    repetir 4
+      RecibirMensaje(id, *)
+      recibirCant(id, cant)
+      si(cant>max)
+        max:=cant
+        g:=id
+  fin
+areas
+  area1: AreaP(4,1,4,100)
+  area2: AreaP(6,1,6,100)
+  area3: AreaP(8,1,8,100)
+  area4: AreaP(10,1,10,100)
+  fuente: AreaPC(11,11,11,11)
+  areaC: AreaP(1,1,1,1)
+robots
+  robot corredor
+  variables
+    ok:boolean
+    quienSoy, calle:numero
+  comenzar
+    ok:=V
+    RecibirMensaje(quienSoy, robC)
+    mientras((ok) & (PosCa<100))
+      avanzar(ok)
+      mover
+    EnviarMensaje(quienSoy,robC)
+    calle:=PosCa
+    EnviarMensaje(calle,robC)
+  fin
+  robot coordinador
+  variables
+    robId:numero
+  comenzar
+    inicializar
+    determinarGanador(robId)
+    Informar(robId)
+  fin
+variables
+  rob1: corredor
+  rob2: corredor
+  rob3: corredor
+  rob4: corredor
+  robC: coordinador
+comenzar
+  AsignarArea(rob1, area1)
+  AsignarArea(rob2, area2)
+  AsignarArea(rob3, area3)
+  AsignarArea(rob4, area4)
+  AsignarArea(robC, areaC)
+  AsignarArea(rob1, fuente)
+  AsignarArea(rob2, fuente)
+  AsignarArea(rob3, fuente)
+  AsignarArea(rob4, fuente)
+  Iniciar(rob1,4,1)
+  Iniciar(rob2,6,1)
+  Iniciar(rob3,8,1)
+  Iniciar(rob4,10,1)
+  Iniciar(robC,1,1)
+fin
