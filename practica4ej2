@@ -1,0 +1,110 @@
+{Productores y consumidores}
+{Existen dos robots productores que recorren las avenidas 5 y 10 respectivamente, juntando todos los papeles de su avenida. A lo largo del recorrido, cada vez que juntan 5 papeles, los depositan en la esquina (50,50).
+{Además existen dos robots consumidores que intentan tomar una cantidad aleatoria de papeles (entre 2 y 5) de la esquina (50,50) para depositarla en su esquina de origen. Si la esquina (50,50) no posee la cantidad de papeles requerida, vuelven a su esquina de origen sin tomar ningún papel. Si luego de 8 intentos seguidos un consumidor detecta que la esquina (50,50) no tiene papeles suficientes para juntar, entonces asumirá que los productores ya han completado su trabajo y por lo tanto terminará su tarea también.}
+{Los consumidores inician en las esquinas (11,1) y (12,1) respectivamente.}
+programa practica4ej2
+procesos
+  proceso depositar(E cant:numero)
+  variables
+    aveIni,caIni:numero
+  comenzar
+    aveIni:=PosAv
+    caIni:=PosCa
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    repetir cant {podria ser repetir 5 pero lo hago asi para reutilizarlo en el ultimo caso}
+      depositarPapel
+    Pos(aveIni,caIni)
+    LiberarEsquina(50,50)
+  fin
+  proceso recolectar(ES pap:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      pap:=pap+1
+      si(pap=5)
+        depositar(pap)
+        pap:=0
+  fin
+  proceso chequeo(E n:numero; ES ok:boolean)
+  variables
+    pap:numero
+  comenzar
+    pap:=0
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      pap:=pap+1
+    si(pap>=n)
+      repetir (pap-n)
+        depositarPapel
+      ok:=V
+    sino
+      repetir pap
+        depositarPapel
+      ok:=F
+  fin
+  proceso buscar(E cantP:numero; ES ok:boolean)
+  variables
+    aveIni,caIni:numero
+  comenzar
+    aveIni:=PosAv
+    caIni:=PosCa
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    chequeo(cantP,ok)
+    Pos(aveIni,caIni)
+    LiberarEsquina(50,50)
+  fin
+areas
+  areap1: AreaP(5,1,5,100)
+  areap2: AreaP(10,1,10,100)
+  areac1: AreaP(11,1,11,1)
+  areac2: AreaP(12,1,12,1)
+  fuente: AreaC(50,50,50,50)
+robots
+  robot productor
+  variables
+    papeles:numero
+  comenzar
+    papeles:=0
+    repetir 99
+      recolectar(papeles)
+      mover
+    recolectar(papeles)
+    depositar(papeles){dejo los papeles que me hayan quedado, no se si es asi}
+  fin
+  robot consumidor
+  variables
+    intentos,cant:numero
+    pude:boolean
+  comenzar
+    intentos:=0
+    mientras(intentos<8)
+      Random(cant,2,5)
+      buscar(cant,pude)
+      si(pude)
+        repetir cant
+          depositarPapel
+        intentos:=0
+      sino
+        intentos:=intentos+1
+  fin
+variables
+  robp1: productor
+  robp2: productor
+  robc1: consumidor
+  robc2: consumidor
+comenzar
+  AsignarArea(robp1, areap1)
+  AsignarArea(robp2, areap2)
+  AsignarArea(robc1, areac1)
+  AsignarArea(robc2, areac2)
+  AsignarArea(robp1, fuente)
+  AsignarArea(robp2, fuente)
+  AsignarArea(robc1, fuente)
+  AsignarArea(robc2, fuente)
+  Iniciar(robp1,5,1)
+  Iniciar(robp2,10,1)
+  Iniciar(robc1,11,1)
+  Iniciar(robc2,12,1)
+fin

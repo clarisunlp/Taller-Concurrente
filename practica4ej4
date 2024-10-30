@@ -1,0 +1,117 @@
+{Jefe y trabajadores - Master/Slave}
+{Un robot jefe asigna tareas a los trabajadores. Las tareas consisten en 1. recoger flores, 2. recoger papeles, 3. vaciar bolsa, 4. finalizar .}
+{Existen 2 robots trabajadores que reciben solicitudes de tareas del robot jefe. Para cada solicitud, reciben la tarea y la esquina donde deben realizarla (salvo cuando la tarea es 4 que no deben acceder a una esquina). Luego de recibir la tarea, los robots van a la esquina indicada, realizan la tarea, avisan al jefe que ya la completaron y quedan a la espera de una nueva tarea.}
+{El robot jefe inicia en la esquina (1,1) y los robots trabajadores inician en las esquinas(2,1) y (3,1). Las tareas se asignan aleatoriamente a cualquier esquina dentro del cuadrante comprendido entre las esquinas (2,2) y (100,100). El robot jefe envía 10 tareas aleatoria (entre 1 y 3) a trabajadores aleatorios y termina. Al finalizar el jefe envía la tarea 4.}
+programa practica4ej4
+procesos
+  proceso trabajo(E n:numero)
+  comenzar
+    si(n=1)
+      mientras(HayFlorEnLaEsquina)
+        tomarFlor
+    sino
+      si(n=2)
+        mientras(HayPapelEnLaEsquina)
+          tomarPapel
+      sino
+        mientras(HayFlorEnLaBolsa)
+          depositarFlor
+        mientras(HayPapelEnLaBolsa)
+          depositarPapel
+  fin
+  proceso realizarTarea(E t:numero; E ave:numero; E ca:numero)
+  variables
+    aveIni,caIni:numero
+  comenzar
+    aveIni:=PosAv
+    caIni:=PosCa
+    BloquearEsquina(ave,ca)
+    Pos(ave,ca)
+    trabajo(t)
+    Pos(aveIni,caIni)
+    LiberarEsquina(ave,ca)
+  fin
+  proceso inicializar
+  comenzar
+    EnviarMensaje(1,rob1)
+    EnviarMensaje(2,rob2)
+  fin
+  proceso determinar(ES ta:numero; ES aven:numero; ES cal:numero; ES rob:numero)
+  variables
+    t,ave,ca,r:numero
+  comenzar
+    Random(t,1,3)
+    Random(ave,2,100)
+    Random(ca,2,100)
+    Random(r,1,2)
+    ta:=t
+    aven:=ave
+    cal:=ca
+    rob:=r
+  fin
+  proceso avisar(E ta:numero; E aven:numero; E cal:numero; E id:numero)
+  variables
+    t,ave,ca:numero
+  comenzar
+    t:=ta
+    ave:=aven
+    ca:=cal
+    si(id=1)
+      EnviarMensaje(t,rob1)
+      EnviarMensaje(ave,rob1)
+      EnviarMensaje(ca,rob1)
+    sino
+      EnviarMensaje(t,rob2)
+      EnviarMensaje(ave,rob2)
+      EnviarMensaje(ca,rob2)
+  fin
+  proceso finalizar
+  comenzar
+    EnviarMensaje(4,rob1)
+    EnviarMensaje(4,rob2)
+  fin
+areas
+  cuadrante: AreaPC(2,2,100,100)
+  area1: AreaP(2,1,2,1)
+  area2: AreaP(3,1,3,1)
+  areaM: AreaP(1,1,1,1)
+robots
+  robot slave
+  variables
+    quienSoy,tarea,avenida,calle:numero
+  comenzar
+    RecibirMensaje(quienSoy,robM)
+    RecibirMensaje(tarea,robM)
+    mientras(tarea<>4)
+      RecibirMensaje(avenida,robM)
+      RecibirMensaje(calle,robM)
+      realizarTarea(tarea,avenida,calle)
+      EnviarMensaje(V,robM)
+      RecibirMensaje(tarea,robM)
+  fin
+  robot master
+  variables
+    tarea,avenida,calle,rob:numero
+    ok:boolean
+  comenzar
+    inicializar
+    repetir 10
+      determinar(tarea,avenida,calle,rob)
+      avisar(tarea,avenida,calle,rob)
+      RecibirMensaje(ok,*)
+    finalizar
+  fin
+variables
+  rob1:slave
+  rob2:slave
+  robM:master
+comenzar
+  AsignarArea(rob1,area1)
+  AsignarArea(rob2,area2)
+  AsignarArea(robM,areaM)
+  AsignarArea(rob1,cuadrante)
+  AsignarArea(rob2,cuadrante)
+  Iniciar(rob1,2,1)
+  Iniciar(rob2,3,1)
+  Iniciar(robM,1,1)
+fin
