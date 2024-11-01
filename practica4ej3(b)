@@ -6,11 +6,22 @@
 {Los robots inician en las esquinas (1,1), (2,1) y (3,1) respectivamente. Existe un robot coordinador, cuya única tarea es asignar identificadores a cada robot.}
 programa practica4ej3b
 procesos
-  proceso inicializar
+  proceso avisar(E id:numero)
+  variables
+    ok:boolean
   comenzar
-    EnviarMensaje(1,rob1)
-    EnviarMensaje(2,rob2)
-    EnviarMensaje(3,rob3)
+    si(id=1)
+      EnviarMensaje(V,rob3)
+      EnviarMensaje(V,rob2)
+    sino
+      si(id=2)
+        EnviarMensaje(V,rob1)
+        EnviarMensaje(V,rob3)
+      sino
+        EnviarMensaje(V,rob1)
+        EnviarMensaje(V,rob2)
+    repetir 2
+      RecibirMensaje(ok,*)
   fin
   proceso enviarOk
   comenzar
@@ -36,25 +47,16 @@ robots
         mientras(HayPapelEnLaEsquina)
           tomarPapel
         mover
-      EnviarMensaje(F,robC)
-      RecibirMensaje(ok,robC)
+      avisar(quienSoy)
     mientras(HayPapelEnLaEsquina)
       tomarPapel
-    EnviarMensaje(V,robC)
+    avisar(quienSoy)
   fin
   robot coordinador
-  variables
-    terminaron:numero
-    ok:boolean
   comenzar
-    terminaron:=0
-    inicializar
-    mientras(terminaron<3)
-      repetir 3
-        RecibirMensaje(ok,*)
-        si(ok)       
-          terminaron:=terminaron+1
-      enviarOk
+    EnviarMensaje(1,rob1)
+    EnviarMensaje(2,rob2)
+    EnviarMensaje(3,rob3)
   fin 
 variables
   rob1: recolector
