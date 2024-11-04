@@ -1,0 +1,152 @@
+{Se organizó una competencia entre el equipo rojo y el equipo azul. Cada equipo consta de dos robots, y debe realizar una tarea:}
+{- Los robots R1 y R2 del equipo rojo debe juntar todas las flores de las avenidas 2 y 3 respectivamente}
+{- Los robots A1 y A2 del equipo azul debe juntar todos los papeles de las calles 98 y 99 respectivamente}
+{Al finalizar la competencia, un robot fiscalizador deberá informar el equipo que juntó más objetos.}
+programa practica5ej1
+procesos
+  proceso agarrarFlores(ES f:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin 
+  proceso agarrarPapeles(ES p:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      p:=p+1
+  fin
+  proceso Inicializar
+  comenzar
+    EnviarMensaje(11,r1)
+    EnviarMensaje(12,r2)
+    EnviarMensaje(21,a1)
+    EnviarMensaje(22,a2)
+  fin
+  proceso recibirCant(E id:numero; ES A:numero; ES R:numero)
+  variables
+    cant:numero
+  comenzar
+    si(id=11)
+      RecibirMensaje(cant,r1)
+      R:=R+cant
+    sino
+      si(id=12)
+        RecibirMensaje(cant,r2)
+        R:=R+cant
+      sino
+        si(id=21)
+          RecibirMensaje(cant,a1)
+          A:=A+cant
+        sino
+          RecibirMensaje(cant,a2)
+          A:=A+cant
+  fin
+areas
+  arear1: AreaP(2,1,2,97)
+  areac1: AreaPC(2,98,2,98)
+  areac2: AreaPC(2,99,2,99)
+  arear12: AreaP(2,100,2,100)
+  arear2: AreaP(3,1,3,97)
+  areac3: AreaPC(3,98,3,98)
+  areac4: AreaPC(3,99,3,99)
+  arear22: AreaP(3,100,3,100)
+  areaa1: AreaP(1,98,1,98)
+  areaa12: AreaP(4,98,100,98)
+  areaa2: AreaP(1,99,1,99)
+  areaa22: AreaP(4,99,100,99)
+  areaF: AreaP(1,1,1,1)
+robots
+  robot equipoR
+  variables
+    flores,miEquipo:numero
+  comenzar
+    flores:=0
+    RecibirMensaje(miEquipo, robF)
+    repetir 96
+      agarrarFlores(flores)
+      mover
+    agarrarFlores(flores)
+    BloquearEsquina(PosAv,98)
+    mover
+    agarrarFlores(flores)
+    BloquearEsquina(PosAv,99)
+    mover
+    LiberarEsquina(PosAv,98)
+    agarrarFlores(flores)
+    mover
+    LiberarEsquina(PosAv,99)
+    agarrarFlores(flores)
+    EnviarMensaje(miEquipo, robF)
+    EnviarMensaje(flores, robF)
+  fin
+  robot equipoA
+  variables
+    papeles,quienSoy:numero
+  comenzar
+    papeles:=0
+    RecibirMensaje(quienSoy, robF)
+    derecha
+    agarrarPapeles(papeles)
+    BloquearEsquina(2,PosCa)
+    mover
+    agarrarPapeles(papeles)
+    BloquearEsquina(3,PosCa)
+    mover
+    LiberarEsquina(2,PosCa)
+    agarrarPapeles(papeles)
+    mover
+    LiberarEsquina(3,PosCa)
+    repetir 95
+      agarrarPapeles(papeles)
+      mover
+    agarrarPapeles(papeles)
+    EnviarMensaje(quienSoy, robF)
+    EnviarMensaje(papeles, robF)
+  fin
+  robot fiscalizador
+  variables
+    id,cantA,cantR:numero
+  comenzar
+    cantA:=0
+    cantR:=0
+    Inicializar
+    repetir 4
+      RecibirMensaje(id, *)
+      recibirCant(id,cantA,cantR)
+    si(cantA>cantR)
+      Informar('ganador equipo azul',cantA)
+    sino
+      Informar('ganador equipo rojo',cantR)
+  fin
+variables
+  r1: equipoR
+  r2: equipoR
+  a1: equipoA
+  a2: equipoA
+  robF: fiscalizador
+comenzar
+  AsignarArea(r1,arear1)
+  AsignarArea(r1,arear12)
+  AsignarArea(r1,areac1)
+  AsignarArea(r1,areac2)
+  AsignarArea(r2,arear2)
+  AsignarArea(r2,arear22)
+  AsignarArea(r2,areac3)
+  AsignarArea(r2,areac4)
+  AsignarArea(a1,areaa1)
+  AsignarArea(a1,areaa12)
+  AsignarArea(a1,areac1)
+  AsignarArea(a1,areac3)
+  AsignarArea(a2,areaa2)
+  AsignarArea(a2,areaa22)
+  AsignarArea(a2,areac2)
+  AsignarArea(a2,areac4)
+  AsignarArea(robF,areaF)
+  Iniciar(r1,2,1)
+  Iniciar(r2,3,1)
+  Iniciar(a1,1,98)
+  Iniciar(a2,1,99)
+  Iniciar(robF,1,1)
+  Iniciar(r1,2,1)
+fin

@@ -1,0 +1,109 @@
+{Existe un robot servidor que tiene su bolsa con papeles. Tres robots clientes tienen 4 intentos cada uno para solicitar al servidor que les entregue papeles. Cada vez que el servidor recibe un pedido de papeles de un cliente, se ubicará en la esquina (100,1), colocará allí una cantidad aleatoria de papeles (entre 1 y 5) y avisará al cliente correspondiente la cantidad de papeles que le depositó.}
+{Una vez que un cliente recibe un aviso, deberá recolectar uno a uno los papeles que le corresponden y depositarlos en su esquina inicial.}
+{El programa finalizará cuando todos los clientes hayan completado todos sus intentos.}
+{Asuma que el servidor tiene los papeles suficientes para cubrir todas las solicitudes.}
+{Los robots clientes inician en las esquinas (10,1), (11,1) y (12,1), y el robot servidor inicia en la esquina (13,1)}
+programa practica5ej5
+procesos
+  proceso solicitarPapeles(E id:numero; ES cant:numero)
+  comenzar
+    EnviarMensaje(V,robS) {primero mando el ok o el id??}
+    EnviarMensaje(id,robS)
+    RecibirMensaje(cant,robS)
+  fin
+  proceso depositar(E cant:numero)
+  variables
+    aveIni,caIni:numero
+  comenzar
+    aveIni:=PosAv
+    caIni:=PosCa
+    repetir cant
+      BloquearEsquina(100,1)
+      Pos(100,1)
+      tomarPapel
+      Pos(aveIni,caIni)
+      LiberarEsquina(100,1)
+      depositarPapel
+  fin
+  proceso inicializar
+  comenzar
+    EnviarMensaje(1,rob1)
+    EnviarMensaje(2,rob2)
+    EnviarMensaje(3,rob3)
+  fin
+  proceso avisar(E n:numero; E id:numero)
+  comenzar
+    si(id=1)
+      EnviarMensaje(n,rob1)
+    sino
+      si(id=2)
+        EnviarMensaje(n,rob2)
+      sino
+        EnviarMensaje(n,rob3)
+  fin
+  proceso designarCantidad(E id:numero)
+  variables
+    cant:numero
+  comenzar
+    Random(cant,1,5)
+    BloquearEsquina(100,1)
+    Pos(100,1)
+    repetir cant
+      depositarPapel
+    Pos(13,1)
+    LiberarEsquina(100,1)
+    avisar(cant,id)
+  fin
+areas
+  area1: AreaP(10,1,10,1)
+  area2: AreaP(11,1,11,1)
+  area3: AreaP(12,1,12,1)
+  areaS: AreaP(13,1,13,1)
+  fuente: AreaC(100,1,100,1)
+robots
+  robot cliente
+  variables
+    quienSoy,intentos,papeles:numero
+  comenzar
+    RecibirMensaje(quienSoy,robS)
+    intentos:=0
+    mientras(intentos<4)
+      solicitarPapeles(quienSoy,papeles)
+      depositar(papeles)
+      intentos:=intentos+1
+    EnviarMensaje(F,robS)
+  fin
+  robot servidor
+  variables
+    finalizados,id:numero
+    ok:boolean
+  comenzar
+    inicializar
+    finalizados:=0
+    mientras(finalizados<3)
+      RecibirMensaje(ok,*)
+      si(ok)
+        RecibirMensaje(id,*)
+        designarCantidad(id)
+      sino
+        finalizados:=finalizados+1
+  fin
+variables
+  rob1: cliente
+  rob2: cliente
+  rob3: cliente
+  robS: servidor
+comenzar
+  AsignarArea(rob1,area1)
+  AsignarArea(rob2,area2)
+  AsignarArea(rob3,area3)
+  AsignarArea(robS,areaS)
+  AsignarArea(rob1,fuente)
+  AsignarArea(rob2,fuente)
+  AsignarArea(rob3,fuente)
+  AsignarArea(robS,fuente)
+  Iniciar(rob1,10,1)
+  Iniciar(rob2,11,1)
+  Iniciar(rob3,12,1)
+  Iniciar(robS,13,1)
+fin

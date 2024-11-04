@@ -1,0 +1,124 @@
+{Tres robots floreros tienen 8 intentos en total para juntar todas las flores dentro del cuadrante comprendido entre las esquinas (40,40) y (60,60). Para ello, en cada intento un robot fiscalizador indicará a un robot aleatorio la esquina a la que debe dirigirse. El fiscalizador calculará esta esquina de manera aleatoria. Al completarse los 8 intentos, los robots floreros deberán depositar todas las flores juntadas en la esquina (10,10), y el robot fiscalizador deberá informar la cantidad total de flores juntadas por los robots.}
+{Los robots floreros inician en las esquinas (1,1), (2,1) y (3,1) respectivamente, y el fiscalizador en la (4,1).}
+programa practica5ej4
+procesos
+  proceso juntarFlores(ES f:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+  proceso limpiarEsquina(ES f:numero)
+  variables
+    ave,ca,aveIni,caIni:numero
+  comenzar
+    RecibirMensaje(ave, robF)
+    RecibirMensaje(ca, robF)
+    aveIni:=PosAv
+    caIni:=PosCa
+    BloquearEsquina(ave,ca)
+    Pos(ave,ca)
+    juntarFlores(f)
+    Pos(aveIni,caIni)
+    LiberarEsquina(ave,ca)
+  fin
+  proceso dejarFlores(E cant:numero)
+  variables
+    aveIni,caIni:numero
+  comenzar
+    aveIni:=PosAv
+    caIni:=PosCa
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    repetir cant
+      depositarFlor
+    Pos(aveIni,caIni)
+    LiberarEsquina(10,10)
+  fin
+  proceso designarRobot
+  variables
+    av,ca,id:numero
+    ok:boolean
+  comenzar
+    Random(av,40,60)
+    Random(ca,40,60)
+    Random(id,1,3)
+    si(id=1)
+      EnviarMensaje(V,rob1)
+      EnviarMensaje(av,rob1)
+      EnviarMensaje(ca,rob1)
+    sino
+      si(id=2)
+        EnviarMensaje(V,rob2)
+        EnviarMensaje(av,rob2)
+        EnviarMensaje(ca,rob2)
+      sino
+        EnviarMensaje(V,rob3)
+        EnviarMensaje(av,rob3)
+        EnviarMensaje(ca,rob3)
+    RecibirMensaje(ok,*)
+  fin
+  proceso finalizar
+  comenzar
+    EnviarMensaje(F,rob1)
+    EnviarMensaje(F,rob2)
+    EnviarMensaje(F,rob3)
+  fin
+areas
+  area1: AreaP(1,1,1,1)
+  area2: AreaP(2,1,2,1)
+  area3: AreaP(3,1,3,1)
+  areaF: AreaP(4,1,4,1)
+  cuadrante: AreaPC(40,40,60,60)
+  deposito: AreaPC(10,10,10,10)
+robots
+  robot florero
+  variables
+    cantF:numero
+    ok:boolean
+  comenzar
+    cantF:=0
+    RecibirMensaje(ok,robF)
+    mientras(ok)
+      limpiarEsquina(cantF)
+      EnviarMensaje(V,robF)
+      RecibirMensaje(ok,robF)
+    dejarFlores(cantF)
+    EnviarMensaje(cantF,robF)
+  fin
+  robot fiscalizador
+  variables
+    intentos,tot,cant:numero
+  comenzar
+    tot:=0
+    intentos:=0
+    mientras(intentos<8)
+      designarRobot
+      intentos:=intentos+1
+    finalizar
+    repetir 3
+      RecibirMensaje(cant,*)
+      tot:=tot+cant
+    Informar(tot)
+  fin
+variables
+  rob1:florero
+  rob2:florero
+  rob3:florero
+  robF:fiscalizador
+comenzar
+  AsignarArea(rob1,area1)
+  AsignarArea(rob2,area2)
+  AsignarArea(rob3,area3)
+  AsignarArea(robF,areaF)
+  AsignarArea(rob1,cuadrante)
+  AsignarArea(rob2,cuadrante)
+  AsignarArea(rob3,cuadrante)
+  AsignarArea(rob1,deposito)
+  AsignarArea(rob2,deposito)
+  AsignarArea(rob3,deposito)
+  Iniciar(rob1,1,1)
+  Iniciar(rob2,2,1)
+  Iniciar(rob3,3,1)
+  Iniciar(robF,4,1)
+fin
